@@ -30,6 +30,9 @@ http://www.cambridge.org/gb/academic/subjects/mathematics/differential-and-integ
 
 
 The Python codes are translated from the MATLAB codes provided
-with the book. The codes were translated by
-T.Shardlow.
+with the book and available from
+
+http://www.maths.manchester.ac.uk/~shardlow/intro_cspde/
+
+The codes were translated by T.Shardlow.
 
