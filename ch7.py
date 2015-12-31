@@ -49,6 +49,7 @@ from matplotlib import cm
 fft=np.fft.fft
 fft2=np.fft.fft2
 ifft=np.fft.ifft
+ifft2=np.fft.ifft2
 #
 import ch0
 import ch4
