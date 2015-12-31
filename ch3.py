@@ -42,6 +42,8 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 #
 from timeit import default_timer as timer
+#
+from numba import vectorize, float64
 # Fourier transform
 fft=np.fft.fft
 fft2=np.fft.fft2
