@@ -15,15 +15,19 @@ ch4.exa4_73()
 # load standard set of Python modules
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
-
-from builtins import (bytes, dict, int, list, object, range, str,
-                      ascii, chr, hex, input, next, oct, open,
-                      pow, round, super, filter, map, zip)
-from future.builtins.disabled import (apply, cmp, coerce, execfile,
-                                      file, long, raw_input, reduce, reload,
-                                      unicode, xrange, StandardError)
-#
 import sys
+if sys.version_info < (3,):
+    try:
+        from builtins import (bytes, dict, int, list, object, range, str,
+                              ascii, chr, hex, input, next, oct, open,
+                              pow, round, super, filter, map, zip)
+        from future.builtins.disabled import (apply, cmp, coerce, execfile,
+                                              file, long, raw_input,
+                                              reduce, reload,
+                                              unicode, xrange, StandardError)
+    except:
+        print("need future module")
+
 #
 from math import *
 # Numpy
@@ -80,7 +84,34 @@ def setseed1(M):
                    r0))
     return  np.cov(tmp)
     
-        
+ def parseed():
+    """
+    A4.4 Page 166
+    """
+    N=5
+    M=6
+    sr=np.zeros((N,M))
+    stream={};    init_state={}
+    for j in range(N):
+        stream[j]=np.random.RandomState() # create new rng
+        init_state[j]=stream[j].get_state() # save initial state
+        sr[j,:]=stream[j].randn(1,M)
+#
+def srandn(j): 
+        stream[j].set_state(init_state[j])# reset state of jth rng
+        return stream[j].randn(1,M)
+    #
+    sr4=srandn(4) # reproduces the 4th row        
+    #
+    from ipyparallel import Client
+    import os
+    rc = Client()   
+    view = rc[:]
+    # tell clients to work in our directory
+    view.apply_sync(os.chdir, os.getcwd())
+    ar=view.map_sync(lambda j: srandn(j),range(N))
+    return sr,sr4,ar
+#       
 def uniform_ball():
     """
     A4.5 Page 167
