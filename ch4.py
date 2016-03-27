@@ -154,7 +154,7 @@ def pop_monte(M,T,Dt,baru0,epsilon):
     A4.9 Page 174
     """
     d=baru0.size
-    N=int(T/Dt)
+    N=int(T//Dt)
     u=np.zeros((M,d))  
     for j in range(M):
         u0=baru0 + epsilon * np.random.uniform(-1,1,d)
@@ -179,7 +179,7 @@ def monte(samples):
     
 def pop_monte_anti(M,T,Dt,baru0,epsilon):
     d=baru0.size
-    N=int(T/Dt)
+    N=int(T//Dt)
     u=np.zeros((2*M,d))  
     for j in range(M):
         u0=baru0 + epsilon * np.random.uniform(-1,1,d)

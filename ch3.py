@@ -12,15 +12,18 @@ ch3.exa3_N() for N=5,8,33,39,40,41,41b,44,45
 # load standard set of Python modules
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
-
-from builtins import (bytes, dict, int, list, object, range, str,
-                      ascii, chr, hex, input, next, oct, open,
-                      pow, round, super, filter, map, zip)
-from future.builtins.disabled import (apply, cmp, coerce, execfile,
-                                      file, long, raw_input, reduce, reload,
-                                      unicode, xrange, StandardError)
-#
 import sys
+if sys.version_info < (3,):
+    try:
+        from builtins import (bytes, dict, int, list, object, range, str,
+                              ascii, chr, hex, input, next, oct, open,
+                              pow, round, super, filter, map, zip)
+        from future.builtins.disabled import (apply, cmp, coerce, execfile,
+                                              file, long, raw_input,
+                                              reduce, reload,
+                                              unicode, xrange, StandardError)
+    except:
+        print("need future module")
 #
 from math import *
 # Numpy
