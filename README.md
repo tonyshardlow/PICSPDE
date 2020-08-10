@@ -29,10 +29,9 @@ See
 http://www.cambridge.org/gb/academic/subjects/mathematics/differential-and-integral-equations-dynamical-systems-and-co/introduction-computational-stochastic-pdes?format=PB&isbn=9780521728522
 
 
-The Python codes are translated from the MATLAB codes provided
-with the book, which are available from
+The Python codes are translated from the MATLAB codes included in
+the book (see the MATLAB/ directory for copies of these codes by Chapter).
 
-http://www.maths.manchester.ac.uk/~shardlow/intro_cspde/
 
 The codes were translated by T.Shardlow.
 
