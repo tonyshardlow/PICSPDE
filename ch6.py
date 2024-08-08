@@ -91,7 +91,8 @@ def quad_sinc(t,J,ell):
     Z=(np.exp(- 1j * t * R) * np.dot(np.random.randn(2), [1j,1]) / sqrt(2)
        +np.sum(np.exp(1j * t * (- R + j * nustep)) * np.dot(np.random.randn(2),[1j,1]) for j in range(J-2))
        + np.exp(1j * t * R) * np.dot(np.random.randn(2) , [1j,1]) / sqrt(2))
-    Z=Z * sqrt(ell / (2 * pi))
+    # Z=Z * sqrt(ell / (2 * pi)) misprint
+    Z=Z * sqrt(1 / (J-1)) # correction 7-Aug 2024
     return Z
 
     
