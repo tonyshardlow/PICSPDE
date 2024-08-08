@@ -1,0 +1,204 @@
+\documentclass[final]{article}	
+\usepackage[a4paper,margin=2.5cm]{geometry}
+	%
+% ams 
+\usepackage{amsmath,amsthm,mathtools}
+% theorems style environments (from amsthm)
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{proposition*}{Proposition}
+\newtheorem*{corollary*}{Corollary}
+\newtheorem*{conjecture*}{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{algorithm}[theorem]{Algorithm}
+%
+\usepackage{graphicx}
+%--------------------------------
+\usepackage{xspace} % for defining text macros
+\usepackage{needspace} % for asking for space before theorems
+
+%-------------------------------
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext} 
+\usepackage[bigdelims]{newtxmath}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage{eucal}
+\newcommand{\vecbs}[1]{\boldsymbol{#1}}
+\renewcommand{\vec}[1]{{\vecbs{#1}}}
+%------------------------------------------------
+
+
+
+
+\usepackage[british]{babel}
+\usepackage[backend=bibtex, style=authoryear-comp, doi=false,
+isbn=false, url=false, sortcites=true, natbib=true,
+uniquename=false, useprefix=true]{biblatex}
+\addbibresource{book.bib}
+
+%-----------------------------------------
+% set depth of section numbering
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{1}
+%--------------------------
+\input{macro_abbrev.ltx}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumi}{Chapter \arabic{enumi}}%
+%
+\raggedbottom
+%
+
+\begin{document}
+
+\begin{center}
+  \textbf{\Huge Introduction to Computational Stochastic PDEs,
+    CUP, 2014}\\[2ex]
+\end{center}
+Here are the typos/errors that we know about in the first edition.  Detailed corrections to MATLAB codes are given
+on-line \footnote{\url{https://github.com/tonyshardlow/picspde}}. Let
+us know if you find anymore.\\
+\today
+
+ \begin{enumerate}
+ \item %C1
+   \begin{description}
+   \item[p17] In Definition 1.60, the Hilbert–Schmidt norm should be defined as
+\[
+\|L\|_{\mathrm{HS}(U,H)}
+\coloneq 
+ \left(\sum_{
+j=1}
+^\infty \|L\phi_j\|^2\right)^{1/2}
+,
+\]
+(the norm on the right is the one in $H$ not in $U$).
+\item[p21] Lemma 1.78 (Dini’s lemma) requires additionally the assumption that $f$ is continuous (to guarantee that
+$f (x) - f_n(x) \ge\epsilon$  for the limit point $x$). In the application of Dini’s lemma for the proof of Theorem
+1.80 (Mercer’s theorem), this holds true for $g(x) = G(x, x)$.
+
+   \end{description}
+ \item%C2
+   \begin{description}
+   \item[p42] Figure 2.1 is misprinted.
+   \item[p56] In the first displayed equation of the proof, the first term in the integrand should be $p(x)(e(x)')^2$ (the $e(x)$ has one too many dashes).
+   \item[p79] The right-hand side of (2.109) should be $c_1|\hat u - I_h\hat u|^2_{H^2(\Delta^*)}$. 
+   
+   Assumption 2.64 in general can only be verified for constant boundary data $g$; $H^2$-regularity results
+usually include an extra term on the right-hands side to account for $g\ne 0$ -- see (Renardy and Rogers,
+2004, Theorem 8.53) or (McLean, 2000, Theorem 4.10).
+
+   \end{description}
+ \item%C3 
+   \begin{description}
+   \item[p116] \texttt{meshgrid} is misused in Example 3.40 and Algorithm 3.6. See \texttt{exa\_3.40.m}.
+   \item[p132] Following the comment on p487 below, the last line of the proof should be
+\[
+\|u(t_n) - \tilde u_n \|\le E\,\exp(L n \Delta t).
+\]
+\end{description}
+ \item%C4  
+   \begin{description}
+   \item[p159] Nensen’s inequality → Jensen’s inequality (in proof of T4.58 (iii)).
+   \item[p179]  Bayes' theorem is due to the Reverend Thomas
+     Bayes and the apostrophe is written after and not, as in
+     Exercise 4.11, before the s. In the same exercise,
+     $p_{X,Y}$ is incorrectly defined and it should be
+     \[
+     \prob(X=x_k,Y=y_j)=P_{X,Y}(k,j)
+     \]
+(interchange $j$ and $k$).
+   \end{description}
+ \item%C5
+   \begin{description}
+   \item[p185] In the second displayed equation on the left-hand side, delete the comma
+
+   \item[p203] By "If the process is Gaussian" in Theorem 5.29, we mean $X$ is Gaussian in the sense of Definition 4.38, which immediately implies that the $\xi_j$ are Gaussian. It can be shown that, if all the finite-dimensional distributions are Gaussian, and sample paths $X\in L^2(\mathcal T)$, then $X$ is also Gaussian in the sense of Definition 4.38. See Theorem 2 of Rajput, B. S. \& Cambanis, S. Gaussian processes and Gaussian measures. Ann. Math. Stat. 43, 1944–1952.
+
+
+
+\item[p204]  The uniform convergence in (5.39) is a consequence of Mercer's Theorem (Theorem 1.80). In particular, write $X(t)-X_J(t)=X(t)-\mu(t)-\sum_{j=1}^J \sqrt{\nu_j} \phi_j(t) \xi_j$. Then, $\mathbb{E}(X(t)-X_J(t))^2=C(t,t)-\sum_{j=1}^J \nu_j |\phi_j(t)|^2\ge 0$ from the KL expansion (as $\xi_j$ has mean zero and unit variance). This converges to zero as $J\to\infty$  uniformly in $t$ by Mercer's Theorem (or directly by Lemma 1.78 as $C$ and $\phi_j$ are continuous).
+   \end{description}
+ \item%C6
+   \begin{description}
+\item[p235]
+In Algorithm 6.3, the normalisation by variance in $\Delta \nu$ in the increments $\Delta \mathcal  W_j$ is missing. To account for this, as $f(\nu_j)\,\Delta \nu_j=(\ell/2\pi)\times 2(\pi/\ell)/ (J-1)  =\frac{1}{J-1}$, the last line should be $\texttt{Z=Z*sqrt(1/(J-1))}$. See also \verb+quad_sinc.m+.
+
+\item[p239]  In Equation (6.34), the outer sum over $k$ has not been carried over from the previous line. The equation should read 
+$$
+\tilde{Z}_R(t_n)=
+\sum_{k=0}^{N-1}e^{\ii 2 \pi k n/N}\sum_{m=0}^{M-1} e^{\ii(-R+m \Delta \nu)\,t_n}\sqrt{f(\nu_{kM+m})}\,\Delta \mathcal W_{kM+m}.
+$$
+
+
+
+   \item[p279] The first two entries in the second column of the matrix $V$ displayed above Example 7.41 should be $\tilde{u}_{2n_{1}+1}$ and $\tilde{u}_{2n_{1}+2}$, not $\tilde{u}_{2n_{2}+1}$ and $\tilde{u}_{2n_{2}+2}$.
+   \end{description}
+ \item%C7 
+ \begin{description}
+     
+   \item[p291] In Algorithm 7.10 (\texttt{turn\_band\_wm.m}), \texttt{f} should be an even function of \texttt{s} (missing modulus).
+\item[p305]
+In  Lemma 7.67, the quantity $M_0(u)$ is infinite as stated. 
+ The proof of Theorem
+7.68 can be fixed by using the Garsia--Rodemich--Rumsey inequality instead
+of Lemma 7.67. 
+
+   \end{description}
+ \item%C8
+   \begin{description}
+   \item
+   \end{description}
+ \item %C9  
+   \begin{description}
+   \item
+   \end{description}
+ \item %C10
+   \begin{description}
+   \item[p442–469] \texttt{meshgrid} is misused in Examples 10.12 and 10.40 and in Algorithms 10.5 and 10.10. See \texttt{exa\_10.40.m}.
+   \end{description}
+ \item[Appendix.]\hphantom{\,}
+ \end{enumerate}
+ \begin{description}
+ 
+     \item[p487] 
+ The discrete Gronwall inequality (Lemma A.14) is incorrect. It should either be
+\begin{lemma} Consider $z_n\ge 0$  such that $z_n\le a+bz_{n-1}$ for $n=1,2,\dots$  and $a,b\ge 0$. If $b=1$, then $z_n\le z_0+na$. If $b\ne 1$, then
+\[
+z_n\le b^n z_0+ \frac{a}{1-b}(1-b^n).\
+\]
+\end{lemma}
+or
+\begin{lemma} Consider $z_n\ge 0$ such that 
+\[
+z_n\le a+b\sum_{k=0}^{n-1} z_k,\quad\text{for $n=0,1,2\dots$}\tag{*}
+\]
+and constants $a,b\ge0$. Then, $z_n\le a(1+b)^n\le a\exp(bn)$.
+\end{lemma}
+The first lemma is (Stuart and Humphries, 1997, Theorem 1.1.12).
+
+To prove the second lemma, notice it is true for $n = 0$. Assume it is true for $z_0,\dots,z_{n-1}$. Then,
+\begin{align*}
+z_n& \le a+b\sum_{k=0}^{n-1} z_k \quad\text{by (*)}\\
+&\le a+b \sum_{k=0}^{n-1}a(1+b)^k \quad\text{by induction assumption}\\
+&= a+ab\frac{1-(1+b)^n}{1-(1+b)} \quad\text{by geometric summation formula}\\
+&\le a+ab\frac{1-(1+b)^n}{-b}=a+ab((1+b)^n-1)=a(1+b)^n.
+\end{align*}
+Therefore, $z_n \le a(1 + b)^n$ 
+for all $n = 0,1,2,\dots$ by induction. Finally, $z_n \le a \exp(bn)$ as $1 + x \le \exp(x)$ for
+$x \ge 0$. The second lemma can be used in the proof of Theorems 3.55 and 10.34.
+ \end{description}
+
+\end{document}
+
+
+
+
