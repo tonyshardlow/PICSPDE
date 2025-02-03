@@ -1,5 +1,5 @@
-Python codes for Introduction to Computational Stochastic PDEs,
-CUP (2014)
+Introduction to Computational Stochastic PDEs,
+CUP (2014) [publisher's website](http://www.cambridge.org/gb/academic/subjects/mathematics/differential-and-integral-equations-dynamical-systems-and-co/introduction-computational-stochastic-pdes?format=PB&isbn=9780521728522)
 
 
     This book gives a comprehensive introduction to numerical
@@ -24,13 +24,13 @@ CUP (2014)
     mathematical biology, neuroscience, fluid flow modelling and
     materials science.
 
-See [publisher's website](http://www.cambridge.org/gb/academic/subjects/mathematics/differential-and-integral-equations-dynamical-systems-and-co/introduction-computational-stochastic-pdes?format=PB&isbn=9780521728522). Here's a list of  [typos and errors](https://people.bath.ac.uk//tjs42/assets/pubs/book-typos.pdf) for the book.
+Here's a list of  [typos and errors](https://people.bath.ac.uk//tjs42/assets/pubs/book-typos.pdf) for the book.
 
-This repository contains Python versions  of most of the MATLAB code from the book (translated by T.Shardlow).
+This repository contains **Python** versions  of most of the MATLAB code from the book (translated by T.Shardlow).
 
-The original MATLAB codes are available in the MATLAB/ directory (organised by Chapter).
+The original **MATLAB** codes are available in the MATLAB/ directory (organised by Chapter).
 
-A translation into Julia is [available here](https://github.com/jaime-varela/stochastic_pdes) (thanks to J. Varela).
+A translation into **Julia** is [available here](https://github.com/jaime-varela/stochastic_pdes) (thanks to J. Varela).
 
 
 
