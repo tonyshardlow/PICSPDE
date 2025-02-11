@@ -100,9 +100,9 @@ def setseed1(M):
         stream[j]=np.random.RandomState() # create new rng
         init_state[j]=stream[j].get_state() # save initial state
         sr[j,:]=stream[j].randn(1,M)
-#
+    # 
     def srandn(j): 
-        #
+        # generate random numbers from jth stream
         stream[j].set_state(init_state[j])# reset state of jth rng
         return stream[j].randn(1,M)
     #
