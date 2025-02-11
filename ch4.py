@@ -48,6 +48,9 @@ import pylab as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 #
+from ipyparallel import Client
+import os
+#
 import ch3
 assert(1/2==0.5),'Fractions are not treated as floating-point numbers. Need: from __future__ import division' 
 #
@@ -92,23 +95,27 @@ def setseed1(M):
     M=6
     sr=np.zeros((N,M))
     stream={};    init_state={}
+    # generate N streams of random numbers
     for j in range(N):
         stream[j]=np.random.RandomState() # create new rng
         init_state[j]=stream[j].get_state() # save initial state
         sr[j,:]=stream[j].randn(1,M)
 #
-def srandn(j): 
+    def srandn(j): 
+        #
         stream[j].set_state(init_state[j])# reset state of jth rng
         return stream[j].randn(1,M)
     #
     sr4=srandn(4) # reproduces the 4th row        
-    #
-    from ipyparallel import Client
-    import os
-    rc = Client()   
+    # parallelize the above code
+    rc = Client()  
+    # wait for 4 engines to be ready
+    rc.wait_for_engines(n=4) 
+    # create a DirectView of all engines
     view = rc[:]
     # tell clients to work in our directory
     view.apply_sync(os.chdir, os.getcwd())
+    # distribute the work
     ar=view.map_sync(lambda j: srandn(j),range(N))
     return sr,sr4,ar
 #       
