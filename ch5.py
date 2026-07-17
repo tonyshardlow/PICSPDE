@@ -85,7 +85,7 @@ def fbm(t,H):
                             - abs(ti - tj) ** (2 * H))
     S,U=np.linalg.eig(C_N)
     xsi=np.random.randn(N)
-    X=np.dot(U,  (S ** 0.5) * xsi))
+    X=np.dot(U,  (S ** 0.5) * xsi)
     return X
 #
 def exa_bm():
