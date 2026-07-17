@@ -289,7 +289,10 @@ def spde_fem_MhDt(u0,T,a,Nref,kappa,neref,L,
     """
     Alg 10.12 Page 473
     """
-    ne=neref // L; assert(ne%1 == 0)
+    # assert(ne%1 == 0) misprint: // has already truncated, so it can never
+    # fail. Test that L divides neref, as the MATLAB does, so that the coarse
+    # grid nests in the reference grid. correction 17 July 2026
+    assert(neref % L == 0);    ne=neref // L
     h=(a / ne);    nvtx=ne + 1
     dtref=T / Nref;    Dt=kappa * dtref
     t=np.linspace(0,T,Nref//kappa+1)

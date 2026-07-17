@@ -300,6 +300,10 @@ def pde_fem_hDt(u0,T,a,Nref,kappa,neref,L,epsilon,fhandle):
     """
     A3.12 Page 123
     """
+    # the MATLAB pde_fem_hDt asserts that L divides neref, so that the coarse
+    # grid nests in the reference grid; the guard was dropped in this port.
+    # Test neref%L, not ne%1: // has already truncated. correction 17 July 2026
+    assert(neref % L == 0)
     ne=neref // L;    h=a / ne;    nvtx=ne + 1
     dtref=T / Nref;    Dt=kappa * dtref
     t=np.linspace(0,T, Nref // kappa)
