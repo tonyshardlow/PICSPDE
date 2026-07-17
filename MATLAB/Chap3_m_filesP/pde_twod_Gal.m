@@ -1,5 +1,5 @@
 function [t,ut]=pde_twod_Gal(u0,T,a,N,J,epsilon,fhandle)
-Dt=T/N; t=[0:Dt:T]'; ut=zeros(J(1)+1,J(2)+1,N);
+Dt=T/N; t=[0:Dt:T]'; ut=zeros(J(1)+1,J(2)+1,N+1); % N+1 corrected 17-Jul 2026
 % set linear operators
 lambdax=2*pi*[0:J(1)/2 -J(1)/2+1:-1]/a(1);
 lambday=2*pi*[0:J(2)/2 -J(2)/2+1:-1]/a(2);
