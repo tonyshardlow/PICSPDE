@@ -169,9 +169,18 @@ def turn_band_exp_3d(grid1,grid2,grid3,M,Mpad,ell):
     """
     xx,yy,zz=np.meshgrid(grid1,grid2,grid3,indexing='ij')
     sum=np.zeros(xx.size)
-    T=np.linalg.norm(np.max(np.abs(np.hstack([grid1,grid2,grid3]))))
+    # norm(max(abs(hstack(...)))) misprint: that is the largest single
+    # coordinate, not the corner radius, so gridt was a factor sqrt(3) too
+    # short and np.interp silently clamped. correction 17 July 2026
+    T=np.linalg.norm([np.linalg.norm(grid1,np.inf),
+                      np.linalg.norm(grid2,np.inf),
+                      np.linalg.norm(grid3,np.inf)])
     gridt=- T + (2 * T / (M - 1)) * np.arange(M + Mpad)
-    c=cov_fn(gridt,ell)
+    # cov_fn(gridt,ell) misprint: circulant_embed_approx needs the covariance
+    # at the non-negative lags 0,Delta,... with the variance first, not at
+    # gridt which starts at -T. cov_fn is the t>=0 branch, blowing up for t<0.
+    # correction 17 July 2026
+    c=cov_fn(gridt+T,ell)
     for j in range(M):
         X,Y=ch6.circulant_embed_approx(c)
         e=ch4.uniform_sphere()
