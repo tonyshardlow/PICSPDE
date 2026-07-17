@@ -211,7 +211,10 @@ def pde_oned_Gal_JDt(u0,T,a,Nref,kappa,Jref,J,epsilon,fhandle):
     Dt=T / N;    t=np.linspace(0,T,N+1)
     # iniitalize
     ut=np.zeros((Jref + 1,N + 1))
-    # use IJJ to set unwanted modes to zero. 
+    # use IJJ to set unwanted modes to zero.
+    # the MATLAB misprint (IJJ=J/2+1:Jref-J/2-1) has no counterpart here:
+    # MATLAB ranges are 1-based and inclusive, np.arange is 0-based and
+    # exclusive, so the same arithmetic already selects the right modes.
     IJJ=np.arange(J / 2 + 1,Jref - J / 2,dtype='int' )
     # set linear operator
     lam=(2 * pi/a) * np.hstack([np.arange(0,Jref / 2+1), np.arange(- Jref / 2 + 1,0)]) 
@@ -222,7 +225,8 @@ def pde_oned_Gal_JDt(u0,T,a,Nref,kappa,Jref,J,epsilon,fhandle):
     for n in range(N): # time loop
         fhu=fft(fhandle(u));        fhu[IJJ]=0
         uh_new=EE*(uh + Dt * fhu) # semi-implicit Euler step
-        u=np.real(ifft(uh))
+        # u=np.real(ifft(uh)) # misprint 
+        u=np.real(ifft(uh_new)) # correction 17 July 2026 
         ut[0:Jref,n+1]=u
         uh=uh_new;        uh[IJJ]=0
     ut[Jref ,:]=ut[0,:] # make periodic
