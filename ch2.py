@@ -67,11 +67,11 @@ def oned_linear_FEM(ne,p,q,f):
     Kks,Mks,bks=get_elt_arrays(h,p,q,f,ne)
     # Assemble element arrays into global arrays
     
-    K=np.sum(sparse.csc_matrix((Kks[:,row_no,col_no],
+    K=sum(sparse.csc_matrix((Kks[:,row_no,col_no],
                                 (elt2vert[row_no,:],elt2vert[col_no,:])),
                                (nvtx,nvtx))
               for row_no in range(2)  for col_no in range(2))
-    M=np.sum(sparse.csc_matrix((Mks[:,row_no,col_no],
+    M=sum(sparse.csc_matrix((Mks[:,row_no,col_no],
                                 (elt2vert[row_no,:],elt2vert[col_no,:])),
                                (nvtx,nvtx))
               for row_no in range(2)  for col_no in range(2))
@@ -112,7 +112,7 @@ def test_FEM_error(ne,uh):
     x_quad=np.vstack([xx[:-1],
                       xx[:-1] + h / 2,
                       xx[1:]])
-    Ek2=np.sum(weights[i]* Ek2_eval(x_quad[i,:], u1s/h, u2s/h)
+    Ek2=sum(weights[i]* Ek2_eval(x_quad[i,:], u1s/h, u2s/h)
                for i in range(3))
     return sqrt(np.sum(Ek2)) # error
 #
@@ -192,7 +192,7 @@ def twod_linear_FEM(ns,xv,yv,elt2vert,nvtx,ne,h,a,f):
     Jks,invJks,detJks=get_jac_info(xv,yv,ne,elt2vert)
     Aks,bks=get_elt_arrays2D(xv,yv,invJks,detJks,ne,elt2vert,a,f)
     A=sparse.csc_matrix((nvtx,nvtx))
-    A=np.sum(sparse.csc_matrix((Aks[:,row_no,col_no],(elt2vert[:,row_no],elt2vert[:,col_no])),
+    A=sum(sparse.csc_matrix((Aks[:,row_no,col_no],(elt2vert[:,row_no],elt2vert[:,col_no])),
                                (nvtx,nvtx))
               for row_no in range(3)  for col_no in range(3))
     b=np.zeros(nvtx)

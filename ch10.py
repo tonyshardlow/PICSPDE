@@ -335,7 +335,7 @@ def spde_fem_convh(u00,T,a,N,neref,L,epsilon,fhandle,ghandle,r,M):
         t,u,ut=spde_fem_MhDt(u0,T,a,N,kappa,neref,Lval,
                              epsilon,fhandle,ghandle,r,M,s0)
         x=np.linspace(0,a,neref//Lval+1)
-        S[j]=np.sum(np.linalg.norm(uref[m,:] - np.interp(xref,x,u[m,:])) ** 2 * href
+        S[j]=sum(np.linalg.norm(uref[m,:] - np.interp(xref,x,u[m,:])) ** 2 * href
                     for m in range(M))
     err=np.sqrt(S / M)
     return h,err
