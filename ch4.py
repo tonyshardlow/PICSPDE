@@ -86,8 +86,8 @@ def setseed1(M):
     tmp=np.vstack((r1,
                    r0))
     return  np.cov(tmp)
-    
- def parseed():
+
+def parseed():
     """
     A4.4 Page 166
     """
@@ -195,7 +195,10 @@ def pop_monte_anti(M,T,Dt,baru0,epsilon):
         u0=2 * baru0 - u0
         t,usample=ch3.exp_euler(u0,T,N,d,f_pop)
         u[j+M,:]=usample[:,-1]
-    bar_x,sig95=monte(u[:,0])
+    # average each antithetic pair before calling monte, so that sig95
+    # reflects the variance reduction; monte(u[:,0]) would treat the 2M
+    # correlated samples as independent. correction 17 July 2026
+    bar_x,sig95=monte((u[0:M,0] + u[M:2*M,0]) / 2)
     return bar_x,sig95
 
 
