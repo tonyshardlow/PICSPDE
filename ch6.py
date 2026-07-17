@@ -103,17 +103,22 @@ def squad(T,N,M,fhandle):
     A6.4 Page 239
     """
     dt=T / (N - 1);    t=np.linspace(0,T,N)
-    R=pi / dt;    dnu=2 * pi / (N * dt * M)
+    # R=pi/dt misprint: 2R must equal (N*M-1)*dnu so the last node is at +R
+    R=((N * M - 1) / (N * M)) * pi / dt;    dnu=2 * pi / (N * dt * M)
     Z=np.zeros(N);    coeff=np.zeros(N,dtype='complex128')
+    # k and m are 0-based here, so the node index is k*M+m: the MATLAB
+    # ((k-1)*M+(m-1)) shifted the grid by -(M+1)*dnu and left the phase
+    # supplied by the ifft disagreeing with the nu used for fhandle.
+    # correction 17 July 2026
     for m in range(M):
         for k in range(N):
-            nu=- R + ((k - 1) * M + (m - 1)) * dnu
+            nu=- R + (k * M + m) * dnu
             xi=np.dot(np.random.randn(2),[1,1j])
             coeff[k]=sqrt(fhandle(nu) * dnu) * xi
-            if ((m == 1 and k == 1) or (m == M and k == N)):
+            if ((m == 0 and k == 0) or (m == M - 1 and k == N - 1)):
                 coeff[k]=coeff[k] / sqrt(2)
         Zi=N *ifft(coeff)
-        Z=Z + np.exp(1j * (- R + (m - 1) * dnu) * t)*Zi
+        Z=Z + np.exp(1j * (- R + m * dnu) * t)*Zi
     return t,Z
 
 def interp_quad(s,N,M,fhandle):

@@ -1,6 +1,7 @@
 function [t, Z]=squad(T, N, M, fhandle)
 dt=T/(N-1); t=dt*[0:N-1]';
-R=pi/dt; dnu=2*pi/(N*dt*M); 
+% R=pi/dt; misprint: 2R must equal (N*M-1)*dnu so the last node is at +R
+R=((N*M-1)/(N*M))*pi/dt; dnu=2*pi/(N*dt*M); % correction 17-Jul 2026
 Z=zeros(N, 1);  coeff=zeros(N,1);
 for m=1:M,
     for k=1:N,
