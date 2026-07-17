@@ -156,10 +156,10 @@ def turn_band_simple(grid1,grid2):
     """
     theta=2 * pi * np.random.uniform()
     e=np.array([cos(theta),sin(theta)])
-    xx,yy=np.meshgrid(grid1,grid2)
+    xx,yy=np.meshgrid(grid1,grid2,indexing='ij')
     tt=np.dot(e,np.vstack([xx.ravel(),yy.ravel()]))
     xi=np.random.randn(2)
-    v=sqrt(1 / 2) * np.dot(xi,np.vstack([np.cos(tt),np.sin(tt)]))
+    v=np.dot(xi,np.vstack([np.cos(tt),np.sin(tt)]))
     v=v.reshape((grid1.size,grid2.size))
     return v
 
@@ -167,7 +167,7 @@ def turn_band_exp_3d(grid1,grid2,grid3,M,Mpad,ell):
     """
     A7.8 Page 288
     """
-    xx,yy,zz=np.meshgrid(grid1,grid2,grid3)
+    xx,yy,zz=np.meshgrid(grid1,grid2,grid3,indexing='ij')
     sum=np.zeros(xx.size)
     T=np.linalg.norm(np.max(np.abs(np.hstack([grid1,grid2,grid3]))))
     gridt=- T + (2 * T / (M - 1)) * np.arange(M + Mpad)
@@ -193,7 +193,7 @@ def turn_band_simple2(grid1,grid2,M):
     """
     A7.9 Page 289
     """
-    xx,yy=np.meshgrid(grid1,grid2)
+    xx,yy=np.meshgrid(grid1,grid2,indexing='ij')
     sum=np.zeros(xx.size)
     for j in range(M):
         xi=np.random.randn(2)
@@ -201,7 +201,7 @@ def turn_band_simple2(grid1,grid2,M):
         e=np.array([cos(theta),sin(theta)])
         tmp=np.vstack([xx.ravel(),yy.ravel()])
         tt=np.dot(e,tmp)
-        v=sqrt(1 / 2) * np.dot(xi,np.vstack([np.cos(tt),np.sin(tt)]))
+        v=np.dot(xi,np.vstack([np.cos(tt),np.sin(tt)]))
         sum=sum + v
     v=sum / sqrt(M)
     v=v.reshape((grid1.size,grid2.size))
@@ -212,7 +212,7 @@ def turn_band_wm(grid1,grid2,M,q,ell):
     """
     A7.10 Page 291
     """
-    xx,yy=np.meshgrid(grid1,grid2)
+    xx,yy=np.meshgrid(grid1,grid2,indexing='ij')
     sum=np.zeros(xx.size)
     T=np.linalg.norm([np.linalg.norm(grid1,np.inf),
                       np.linalg.norm(grid2,np.inf)])
