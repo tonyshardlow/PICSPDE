@@ -12,7 +12,11 @@ for j=1:length(L)
   [t,u,ut]=spde_fem_MhDt(u0,T,a,N,kappa,neref,L(j),...
                            epsilon,fhandle,ghandle,r,M);
   x=[0:h(j):a]'; uinterp=interp1(x,u,xref);
-  S(j)=sum(sum(uref(:,end,:)-uinterp(:,end,:)).^2)*href;
+  % sum(sum(uref(:,end,:)-uinterp(:,end,:)).^2)*href misprint: the .^2 sat
+  % outside the inner sum, giving (sum_x D_x)^2, and uref/uinterp are nvtx-by-M
+  % so (:,end,:) took only sample M while err divides by M. Match the sibling
+  % spde_fem_convDt. correction 17-Jul 2026
+  S(j)=sum(sum((uref-uinterp).^2))*href;
 end
 err=sqrt(S/M);
 
