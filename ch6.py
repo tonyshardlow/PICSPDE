@@ -87,9 +87,11 @@ def quad_sinc(t,J,ell):
     A6.3 Page 235
     """
     R=pi / ell
-    nustep=2 * R / J
+    nustep=2 * R / (J-1) # 2*R/J misprint: correction 17 July 2026
+    # j runs 1..J-2, as in the MATLAB: j=0 would repeat the -R endpoint below
+    # and drop the node at -R+(J-2)*nustep. correction 17 July 2026
     Z=(np.exp(- 1j * t * R) * np.dot(np.random.randn(2), [1j,1]) / sqrt(2)
-       +np.sum(np.exp(1j * t * (- R + j * nustep)) * np.dot(np.random.randn(2),[1j,1]) for j in range(J-2))
+       +sum(np.exp(1j * t * (- R + j * nustep)) * np.dot(np.random.randn(2),[1j,1]) for j in range(1,J-1))
        + np.exp(1j * t * R) * np.dot(np.random.randn(2) , [1j,1]) / sqrt(2))
     # Z=Z * sqrt(ell / (2 * pi)) misprint
     Z=Z * sqrt(1 / (J-1)) # correction 7-Aug 2024
