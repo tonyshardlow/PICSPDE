@@ -96,7 +96,10 @@ def gaussA_exp(x1,x2,a11,a22,a12):
     """
     A7.3 Page 278
     """
-    c=exp(- ((x1 ** 2 * a11 + x2 ** 2 * a22) - 2 * x1 * x2 * a12))
+    # -2*x1*x2*a12 misprint: gives A with off-diagonal -a12, not +a12.
+    # Example exa7_40 now uses a12=-0.5 and so is unchanged.
+    # correction 17 July 2026
+    c=exp(- ((x1 ** 2 * a11 + x2 ** 2 * a22) + 2 * x1 * x2 * a12))
     return c
 
 def circ_embed_sample_2d(C_red,n1,n2):
@@ -235,7 +238,7 @@ def exa7_31():
     X,Y=circ_cov_sample_2d(C_red,3,3)
     print(X,"\n",Y)
 def exa7_40(): 
-    fhandle=lambda x1,x2:gaussA_exp(x1,x2,1,1,0.5)
+    fhandle=lambda x1,x2:gaussA_exp(x1,x2,1,1,-0.5) # a12=-0.5: correction 17 July 2026
     C_red=reduced_cov(3,2,1/2,1,fhandle)
     print(C_red)
 def exa7_41():
