@@ -1,7 +1,9 @@
 function [mean_u, var_u]=twod_MC_FEM(ns,Q,ell,alpha)
 % FEM mesh info
 [xv,yv,elt2vert,nvtx,ne,h]=uniform_mesh_info(ns);
-xv=reshape(xv,ns+1,ns+1)'; yv=reshape(xv,ns+1,ns+1)';
+% yv=reshape(xv,...) misprint: rebuilt yv from the already-reshaped xv.
+% Harmless here only because uniform_mesh_info uses y=x. correction 17-Jul 2026
+xv=reshape(xv,ns+1,ns+1)'; yv=reshape(yv,ns+1,ns+1)';
 b_nodes=find((xv==0)|(xv==1)|(yv==0)|(yv==1));
 int_nodes=1:nvtx; int_nodes(b_nodes)=[]; 
 % specify covariance 
