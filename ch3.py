@@ -331,7 +331,7 @@ def pde_fem_convh(u00,T,a,N,neref,L,epsilon,fhandle):
         t,u=pde_fem_hDt(u0,T,a,N,kappa,neref,Lval,epsilon,fhandle)
         x=np.linspace(0,a, neref//Lval+1)
         uinterp=np.interp(xref,x,u[:,-1])
-        S[j]=np.sum(uref[:,-1] - uinterp) ** 2 * href
+        S[j]=np.sum((uref[:,-1] - uinterp) ** 2) * href # correction 17 July 2026
     err=np.sqrt(S)
     return h,err
 #

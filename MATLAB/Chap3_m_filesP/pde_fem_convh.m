@@ -5,6 +5,6 @@ for j=1:length(L)
     h(j)=href*L(j);  u0=u00(1:L(j):end);
     [t,u]=pde_fem_hDt(u0,T,a,N,kappa,neref,L(j),epsilon,fhandle);
     x=[0:h(j):a]'; uinterp=interp1(x,u,xref);
-    S(j)=sum(uref(:,end)-uinterp(:,end)).^2*href;
+    S(j)=sum((uref(:,end)-uinterp(:,end)).^2)*href; % correction 17-Jul 2026
 end
 err=sqrt(S);
