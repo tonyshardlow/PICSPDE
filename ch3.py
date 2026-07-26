@@ -484,10 +484,13 @@ def exa3_40(needFigure=True):
     x=np.linspace(0,a[0],J[0]+1)
     y=np.linspace(0,a[1],J[1]+1)
     [xx,yy]=np.meshgrid(x,y,indexing='ij')
-    # initial data printed in book
-    #u0=np.sin(xx)*np.cos(pi*yy/8)
-    # we think he intended this initial data, which gives Fig 3.8b
-    u0=np.sin(yy)*np.cos(pi*xx/8);
+    # initial data as printed in Example 3.40 and in the sentence below
+    # Fig 3.5. The published Fig 3.5(b) was computed from sin(x2)cos(pi x1/8)
+    # instead, through the meshgrid misuse recorded in the errata at p116;
+    # that field jumps by 1.78 and 0.29 across the two periodic boundaries,
+    # so it cannot have been intended. This figure therefore differs from the
+    # one printed in the first edition.
+    u0=np.sin(xx)*np.cos(pi*yy/8)
     start=timer()
     [t,ut]=pde_twod_Gal(u0,T,a,N,J,epsilon,fAC)
     end=timer()
