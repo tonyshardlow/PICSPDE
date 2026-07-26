@@ -457,8 +457,9 @@ def exa10_39(needFigure=True):
 
     #
 def exa10_40(needFigure=True):
-    T=10; N=int(1e3); a=np.array([2*pi,16]); J=np.array([128,64])
-    alpha=0.1; epsilon=1e-3; sigma=0.1; M=2; kappa=1;
+    # J1 = J2 = 128, Dt = 0.01 on [0,10], and M = 1, as printed in Example 10.40
+    T=10; N=int(1e3); a=np.array([2*pi,16]); J=np.array([128,128])
+    alpha=0.1; epsilon=1e-3; sigma=0.1; M=1; kappa=1;
     x=np.linspace(0,a[0],J[0]+1); y=np.linspace(0,a[1],J[1]+1)
     xx,yy=np.meshgrid(x,y,indexing='ij')
     # initial data as printed in Example 10.40, u0 = sin(x1) cos(pi x2/8). The
