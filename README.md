@@ -24,7 +24,7 @@ CUP (2014) [publisher's website](http://www.cambridge.org/gb/academic/subjects/m
     mathematical biology, neuroscience, fluid flow modelling and
     materials science.
 
-Here's a list of  [typos and errors](https://people.bath.ac.uk//tjs42/assets/pubs/book-typos.pdf) for the book.
+Here's a list of  [typos and errors](https://tonyshardlow.github.io/assets/pubs/book-typos.pdf) for the book.
 
 This repository contains **Python** versions  of most of the MATLAB code from the book (translated by T.Shardlow).
 
