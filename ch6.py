@@ -156,9 +156,11 @@ def circ_cov_sample(c):
     A6.7 Page 246
     """
     N=c.size
-    d=ifft(c) * N
+    # real part, as MATLAB ifft(c,'symmetric'): the rounding-level imaginary
+    # part would otherwise leak into sqrt(d)
+    d=np.real(ifft(c)) * N
     xi=np.dot(np.random.randn(N,2), [1,1j])
-    Z=fft(np.multiply(d ** 0.5,xi)) / sqrt(N)
+    Z=fft(np.multiply(d.astype(complex) ** 0.5,xi)) / sqrt(N)
     X=np.real(Z)
     Y=np.imag(Z)
     return X,Y
@@ -207,7 +209,7 @@ def circulant_wm(N,M,dt,q):
     """
     Ndash=N + M - 1
     c=np.zeros(Ndash + 1)
-    T=(Ndash+1)*dt;    t=np.linspace(0,T,Ndash+1)
+    t=dt * np.arange(Ndash + 1) # spacing dt, as in the MATLAB
     c[0]=1 # t=0 is special, due to singularity in Bessel fn
     const=2 ** (q - 1) * gamma(q)
     for i in range(1,Ndash + 1):
