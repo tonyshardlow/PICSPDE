@@ -131,13 +131,15 @@ def uniform_mesh_info(ns):
     elt2vert=np.zeros((ne,3),dtype='int')
     vv=np.reshape(np.arange(0,nvtx),(ns + 1,ns + 1),order='F')
     v1=vv[0:ns,0:ns];  v2=vv[1:,0:ns];  v3=vv[0:ns,1:]
-    elt2vert[0:n2,:]=np.vstack((v1.ravel(),
-                                v2.ravel(),
-                                v3.ravel())).T
+    # order='F' numbers the elements left to right, then bottom to top,
+    # as in the MATLAB
+    elt2vert[0:n2,:]=np.vstack((v1.ravel(order='F'),
+                                v2.ravel(order='F'),
+                                v3.ravel(order='F'))).T
     v1=vv[1:,1:]
-    elt2vert[n2:,:]=np.vstack((v1.ravel(),
-                               v3.ravel(),
-                               v2.ravel())).T
+    elt2vert[n2:,:]=np.vstack((v1.ravel(order='F'),
+                               v3.ravel(order='F'),
+                               v2.ravel(order='F'))).T
     plt.figure(2)               #
     ch0.PlotSetup()   
     plt.axis('equal')
@@ -197,13 +199,15 @@ def twod_linear_FEM(ns,xv,yv,elt2vert,nvtx,ne,h,a,f):
               for row_no in range(3)  for col_no in range(3))
     b=np.zeros(nvtx)
     for row_no in range(3):
-        nrow=elt2vert[:,row_no]
-        b[nrow]=b[nrow]+bks[:,row_no]
+        # a vertex belongs to several elements: np.add.at accumulates the
+        # repeated indices, where b[nrow]=b[nrow]+... keeps only one of them
+        np.add.at(b,elt2vert[:,row_no],bks[:,row_no])
     # get discrete Dirichlet boundary data 
-        b_nodes=np.squeeze(np.hstack((np.where(xv == 0),
-                                      np.where(xv == 1),
-                                      np.where(yv == 0),
-                                      np.where(yv == 1))))
+    # np.unique: each corner lies on two sides
+    b_nodes=np.unique(np.hstack((np.where(xv == 0),
+                                 np.where(xv == 1),
+                                 np.where(yv == 0),
+                                 np.where(yv == 1))))
     int_nodes=np.ones(nvtx,dtype='bool');
     int_nodes[b_nodes]=False;    int_nodes=np.squeeze(int_nodes)
     b_int=np.squeeze(b[int_nodes])
@@ -270,8 +274,11 @@ def example_p58():
         plt.plot(xx,uex,'-k')
     plt.tight_layout()    
     plt.savefig('fig2_6.pdf',bbox_inches='tight')
-    error=test_FEM_error(ne,uh)
-    print ('error',error)
+    # test_FEM_error is written for p=1, q=0, f=1 (exact solution x(1-x)/2),
+    # not for the q=10 solutions plotted above
+    for ne in (2,4,8,16,32):
+        uh=oned_linear_FEM(ne,np.ones(ne),np.zeros(ne),np.ones(ne))[0]
+        print('error (p=1, q=0, f=1) for ne=',ne,' is ',test_FEM_error(ne,uh))
 #
 def example_p76():
     ns=50
