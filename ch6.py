@@ -77,7 +77,9 @@ def fkl_1d(J,T,ell):
     kk=np.arange(0,2 * J ) # range of k
     b=np.sqrt(1 / T * np.exp(- pi * (kk * ell / T) ** 2))
     b[0]=sqrt(0.5) * b[0]
-    xi=np.random.uniform(0,1,2 * J) * sqrt(12) - sqrt(3)
+    # complex coefficients: a cosine and an independent sine term for each k,
+    # so that the covariance is c(s-t) and not (c(s-t)+c(s+t))/2 (Example 6.10)
+    xi=(np.random.uniform(0,1,(2 * J,2)) * sqrt(12) - sqrt(3)) @ np.array([1,1j])
     XJ=np.real(fft(b*xi))
     XJ=XJ[0:J]
     return XJ
