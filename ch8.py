@@ -207,18 +207,16 @@ def mlmc(u0,T,d,m,fhandle,ghandle,kappa,epsilon,DTMX):
     for j in range(L0,Levels):
         N=kappa ** j
         S1,S2=getlevel(u0,T,N,d,m,fhandle,ghandle,kappa,M[j],j,L0,S1,S2)
-        VL[L0:j]=S2[L0:j] / M[L0:j] - (S1[L0:j] / M[L0:j]) ** 2
-        
-        KC=(2 / epsilon ** 2) * sqrt(VL[L0] / DT[L0])
-        if j > L0:
-            KC=KC + (2/epsilon**2) * np.sum(np.sqrt(VL[L0:j]
-                                                    / DT[L0:j] * Ckappa))
-            
-            tmp=np.sqrt(np.multiply(VL[L0:j], DT[L0:j]))
-            ML[L0:j]=np.ceil((KC / Ckappa)*tmp)
-        else:
-            ML[L0]=ceil(KC * sqrt(VL[L0] * DT[L0]))
-        for l in range(L0,j):
+        VL[L0:j+1]=S2[L0:j+1] / M[L0:j+1] - (S1[L0:j+1] / M[L0:j+1]) ** 2
+
+        KC=(2 / epsilon ** 2) * sqrt(VL[L0] / DT[L0])   # coarse level
+        if j > L0:                                         # corrections
+            KC=KC + (2/epsilon**2) * np.sum(np.sqrt(VL[L0+1:j+1]
+                                                    / DT[L0+1:j+1] * Ckappa))
+            ML[L0+1:j+1]=np.ceil(KC * np.sqrt(VL[L0+1:j+1] * DT[L0+1:j+1]
+                                              / Ckappa))
+        ML[L0]=ceil(KC * sqrt(VL[L0] * DT[L0]))   # coarse level, full KC
+        for l in range(L0,j+1):
             dM=ML[l] - M[l]
             if dM > 0:
                 N=kappa ** l
