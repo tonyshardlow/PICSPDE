@@ -96,8 +96,7 @@ def vdp_f(u,lam,alpha):
                 - u[1] * (lam + u[0] ** 2) + alpha * u[0] - u[0] ** 3]    )
     return f
 #
-@jit([f8[:](f8[:],f8)])
-def vdp_g(u,sigma):
+def vdp_g(u,sigma): # no @jit: numba cannot type the column reshape
     """
     Helper function Alg 8.2
     """
@@ -118,7 +117,8 @@ def MilsteinDiag(u0,T,N,d,m,fhandle,ghandle,dghandle):
     for n in range(N):
         dW=sqrtDt * np.random.randn(m)
         gu_n=ghandle(u_n)
-        u_new=(u_n + Dt * fhandle(u_n) + np.dot(gu_n,dW)
+        # diagonal noise: componentwise g_i dW_i, as gu_n.*dW in the MATLAB
+        u_new=(u_n + Dt * fhandle(u_n) + gu_n * dW
                + 0.5 * (dghandle(u_n)*gu_n)* (dW ** 2 - Dt))
         u[:,n + 1]=u_new
         u_n=u_new
@@ -156,7 +156,7 @@ def EMpath(u0,T,N,d,m,fhandle,ghandle,kappa0,M,s0):
     Dt=kappa0 * Dtref
     NN=int(N / kappa0)
     u=np.zeros((d,M,NN + 1))
-    t=np.linspace(0,T,NN)
+    t=np.linspace(0,T,NN + 1)
     gdW=np.zeros((d,M))
     sqrtDtref=sqrt(Dtref)
     u_n=np.copy(u0)
@@ -308,21 +308,21 @@ def exa8_28():
     plt.savefig('fig8_8.pdf',bbox_inches='tight')
 #
 def exa8_33():
-    d=2; m=2;T=0.05; Nref=5000; M=1;
+    # the parameters of the text: T=1, Nref=5000, kappa=100, and the same
+    # drift and diffusion for the reference and the coarse paths
+    d=2; m=2;T=1; Nref=5000; M=1;
     A=np.array([[1,0],[0,-1]])
-    u0=np.array([1,1])
+    u0=np.array([1.,1.])
     u0.shape=(u0.size,1)
     s0=np.random.RandomState()
     s0_state=s0.get_state()
     t,uref=EMpath(u0,T,Nref,d,m,
-                  #  lambda u: A.dot(u),
-                  lambda u: np.zeros((2,1)),
-                  #lambda u: np.array([[u[0],0],[0,2*u[1]]]),
-                  lambda u: np.array([[1,0],[0,1]]),
+                  lambda u: A.dot(u),
+                  lambda u: np.array([[u[0],0],[0,2*u[1]]]),
                1,M,s0)
     #
     s0.set_state(s0_state);
-    kappa=2
+    kappa=100
     
     t,u=EMpath(u0,T,Nref,d,m,
                lambda u: A.dot(u),
