@@ -74,7 +74,7 @@ def circ_cov_sample_2d(C_red,n1,n2):
     xi=np.random.randn(n1,n2) + 1j*np.random.randn(n1,n2)
     V=(Lam ** 0.5)*xi
     Z=fft2(V) / sqrt(N)
-    Z=np.ravel(Z)
+    Z=np.ravel(Z,order='F') # vec: stack the columns, as Z(:) in MATLAB
     X=np.real(Z)
     Y=np.imag(Z)
     return X,Y
@@ -111,14 +111,10 @@ def circ_embed_sample_2d(C_red,n1,n2):
     tilde_C_red[1:2 * n1,1:2 * n2]=C_red
     tilde_C_red=np.fft.fftshift(tilde_C_red)
     u1,u2=circ_cov_sample_2d(tilde_C_red,2 * n1,2 * n2)
-    u1=np.ravel(u1)
-    u2=np.ravel(u2)
-    u1=u1[0:2*n1*n2]
-    u1=u1.reshape((n1,2 * n2))
-    u1=u1[:,::2]
-    u2=u2[0:2*n1*n2]
-    u2=u2.reshape((n1,2 * n2))
-    u2=u2[:,::2]
+    # the field on the original grid is the leading n1-by-n2 block of the
+    # 2n1-by-2n2 sample (vec stacks columns, as Z(:) in MATLAB)
+    u1=u1.reshape((2 * n1,2 * n2),order='F')[0:n1,0:n2]
+    u2=u2.reshape((2 * n1,2 * n2),order='F')[0:n1,0:n2]
     return u1,u2
 
        
@@ -140,14 +136,9 @@ def circ_embed_sample_2dB(C_red,n1,n2,m1,m2):
     tilde_C_red[1:2 * nn1,1:2 * nn2]=C_red
     tilde_C_red=np.fft.fftshift(tilde_C_red)
     u1,u2=circ_cov_sample_2d(tilde_C_red,2 * nn1,2 * nn2)
-    u1=np.ravel(u1)
-    u2=np.ravel(u2)
-    u1=u1[0:2 * nn1 * n2]
-    u1=u1.reshape((nn1,2 * n2))
-    u1=u1[0:n1,::2]
-    u2=u2[0:2 * nn1 * n2]
-    u2=u2.reshape((nn1,2 * n2))
-    u2=u2[0:n1,::2]
+    # the leading n1-by-n2 block of the 2nn1-by-2nn2 sample
+    u1=u1.reshape((2 * nn1,2 * nn2),order='F')[0:n1,0:n2]
+    u2=u2.reshape((2 * nn1,2 * nn2),order='F')[0:n1,0:n2]
     return u1,u2
 
 def turn_band_simple(grid1,grid2):
