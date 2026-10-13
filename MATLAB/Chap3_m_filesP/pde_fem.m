@@ -1,6 +1,8 @@
 function [t,ut]=pde_fem(u0,T,a,N,ne,epsilon,fhandle)
 h=a/ne; nvtx=ne+1; Dt=T/N; t=[0:Dt:T]'; 
-p=epsilon*ones(ne,1);q=ones(ne,1);f=ones(ne,1);
+% oned_linear_FEM works on (0,1) with h=1/ne; p=epsilon/a and q=a give
+% the matrices for (0,a) with h=a/ne
+p=(epsilon/a)*ones(ne,1);q=a*ones(ne,1);f=ones(ne,1);
 [uh,A,b,KK,MM]=oned_linear_FEM(ne,p,q,f);
 EE=(MM+Dt*KK); ZM=0;
 ut=zeros(nvtx,N+1); ut(:,1)=u0; u=u0; % set initial condition

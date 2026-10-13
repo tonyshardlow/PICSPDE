@@ -130,16 +130,17 @@ def pde_fd(u0,T,a,N,J,epsilon,fhandle,bctype):
     A=scipy.sparse.diags([-1,2,-1],[-1,0,1],
                          shape=(J+1,J+1),
                          format='csc')
-    if 'd' == bctype.lower():
+    bc=bctype[0].lower() # 'd', 'p' or 'n'; the long names also work
+    if 'd' == bc:
         ind=np.arange(1,J)
         A=A[:,ind]; A=A[ind,:]
     else:
-        if 'p' == bctype.lower():
+        if 'p' == bc:
             ind=np.arange(0,J)
             A=A[:,ind]; A=A[ind,:]
-            A[1,-1]=- 1; A[-1,1]=- 1
+            A=A.tolil(); A[0,-1]=- 1; A[-1,0]=- 1; A=A.tocsc() # corners
         else:
-            if 'n' == bctype.lower():
+            if 'n' == bc:
                 ind=np.arange(0,J + 1)
                 A[0,1]= -2; A[-1,-2]= -2 
     EE=scipy.sparse.identity(ind.size,format='csc') + (Dt * epsilon/h**2) * A 
@@ -153,7 +154,7 @@ def pde_fd(u0,T,a,N,J,epsilon,fhandle,bctype):
         u_new=EEinv(u_n + Dt * fu) # linear solve for EE
         ut[ind,k + 1]=u_new
         u_n=u_new
-    if bctype.lower() == 'p':
+    if bc == 'p':
         ut[-1,:]=ut[0,:] # correct for periodic case  
     return t,ut
 
@@ -241,7 +242,7 @@ def pde_oned_Gal_convDt(u0,T,a,Nref,kappa,J,epsilon,fhandle):
     S=np.empty_like(kappa,dtype='float64')
     for i, kappaval in np.ndenumerate(kappa):
         t,ut=pde_oned_Gal_JDt(u0,T,a,Nref,kappaval,J,J,epsilon,fhandle)
-        S[i]=np.sum((ureft[0:-2,-1] - ut[0:- 2,-1]) ** 2) * (a / J)
+        S[i]=np.sum((ureft[0:-1,-1] - ut[0:-1,-1]) ** 2) * (a / J)
     errT=np.sqrt(S)
     dtref=T / Nref
     dt=kappa * dtref
@@ -256,7 +257,7 @@ def pde_oned_Gal_convJ(u0,T,a,N,Jref,J,epsilon,fhandle):
     S=np.empty_like(J,dtype='float64')
     for i, Jval in np.ndenumerate(J):
         t,ut=pde_oned_Gal_JDt(u0,T,a,N,1,Jref,Jval,epsilon,fhandle)
-        S[i]=np.sum((ureft[0:-2,-1] - ut[0:-2,-1]) ** 2) * a / Jref
+        S[i]=np.sum((ureft[0:-1,-1] - ut[0:-1,-1]) ** 2) * a / Jref
     errJ=np.sqrt(S)
     return errJ
 #
@@ -266,7 +267,10 @@ def pde_fem(u0,T,a,N,ne,epsilon,fhandle):
     """
     h=a / ne;    nvtx=ne + 1;    Dt=T / N
     t=np.linspace(0,T,N+1)
-    p=epsilon;    q=1;    f=1
+    # oned_linear_FEM works on (0,1) with h=1/ne; its diffusion entries are
+    # proportional to p/h and its mass entries to q*h, so p=epsilon/a and q=a
+    # give the matrices for (0,a) with h=a/ne
+    p=epsilon / a;    q=a;    f=1
     uh,A,b,KK,MM=ch2.oned_linear_FEM(ne,p,q,f)
     EE=(MM + Dt * KK);    ZM=0
     # set initial condition
@@ -306,12 +310,12 @@ def pde_fem_hDt(u0,T,a,Nref,kappa,neref,L,epsilon,fhandle):
     assert(neref % L == 0)
     ne=neref // L;    h=a / ne;    nvtx=ne + 1
     dtref=T / Nref;    Dt=kappa * dtref
-    t=np.linspace(0,T, Nref // kappa)
-    p=epsilon;    q=1;    f=1
+    t=np.linspace(0,T, Nref // kappa + 1)
+    p=epsilon / a;    q=a;    f=1 # scaled for (0,a), as in pde_fem
     uh,A,b,K,M=ch2.oned_linear_FEM(ne,p,q,f)
     EE=M + Dt * K;    ZM=0
     # set initial condition
-    ut=np.zeros((nvtx, Nref // kappa + 1));    ut[:,1]=u0;    u=np.copy(u0)
+    ut=np.zeros((nvtx, Nref // kappa + 1));    ut[:,0]=u0;    u=np.copy(u0)
     EEinv=sparse.linalg.factorized(EE)
     for n in range(Nref // kappa): # time loop
         fu=fhandle(u)
@@ -424,9 +428,9 @@ def exa3_8():
 
 def exa3_33(needFigure=True):
     T=10
-    N=1e4
+    N=10 ** 4
     epsilon=1
-    a=20;J=128;h=a/J; x=np.linspace(0,a,J+1)
+    a=20;J=512;h=a/J; x=np.linspace(0,a,J+1)
     u0=1/(1+np.exp(-(2-x)/sqrt(2)))
     start=timer()
     [t,ut]=pde_fd(u0,T,a,N,J,epsilon,fNagumo,'N')

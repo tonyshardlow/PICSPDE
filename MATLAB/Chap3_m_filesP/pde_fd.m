@@ -18,6 +18,6 @@ for k=1:N, % time loop
   u_new=EE\(u_n+Dt*fu); % linear solve for (1+epsilon A)
   ut(ind,k+1)=u_new; u_n=u_new;    
 end
-if lower(bctype)=='p' | lower(bctype)=='periodic'
+if any(strcmpi(bctype,{'p','periodic'})) % == fails for the long names
     ut(end,:)=ut(1,:); % correct for periodic case
 end
