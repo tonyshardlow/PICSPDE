@@ -61,7 +61,7 @@ def est_mean_var_func(mu,sigma,M):
     X=np.random.randn(M)
     X=mu + sigma * X
     mu_M=np.mean(X)
-    sig_sq_M=np.var(X)
+    sig_sq_M=np.var(X,ddof=1) # divide by M-1, as MATLAB var does
     return mu_M,sig_sq_M
 
 def setseed0(M):
@@ -150,9 +150,12 @@ def gauss_chol(mu,C):
     """
     A4.8 Page 170
     """
-    R= scipy.linalg.cholesky(C, lower=True)
+    # upper-triangular R with C=R^T R, as MATLAB chol; then X=mu+R^T Z has
+    # covariance R^T R=C (the lower factor L gave L^T L, which is not C)
+    mu=np.asarray(mu,dtype=float)
+    R=scipy.linalg.cholesky(C)
     Z=np.random.randn(mu.size)
-    X=mu+np.dot(R.T,Z)
+    X=mu+np.dot(R.T,Z).reshape(mu.shape)
     return X
 
     
@@ -179,7 +182,7 @@ def monte(samples):
     Helper function for A4.9 Page 174
     """
     M=samples.size
-    conf95=2 * sqrt(np.var(samples) / M)
+    conf95=2 * sqrt(np.var(samples,ddof=1) / M) # sample variance, M-1
     sample_av=np.mean(samples)
     return sample_av,conf95
 
