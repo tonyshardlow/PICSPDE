@@ -443,8 +443,6 @@ def exa3_33(needFigure=True):
         plt.figure(1)
         ch0.PlotSetup()
         ax = plt.gca()
-        
-        ax = plt.Axes3D(fig)
         #ax.plot_wireframe(T,X,ut,rstride=16,cstride=1000,colors='k')
         CS=ax.contourf(X,T,ut,10,cmap=plt.cm.bone)
         #ax.set_zlabel(r'$u$')
@@ -470,7 +468,7 @@ def exa3_39(needFigure=True):
     if (needFigure==True):
         plt.figure(1)
         ch0.PlotSetup()
-        ax = plt.gca(projection='3d')
+        ax = plt.gcf().add_subplot(projection='3d')
         [T,X]=np.meshgrid(t,x)
         ax.plot_surface(T,X,ut,cmap=cm.bone,linewidth=0, antialiased=False)
         ax.set_xlabel(r'$t$')
@@ -481,7 +479,7 @@ def exa3_39(needFigure=True):
     
 def exa3_40(needFigure=True):
     T=10
-    N=1e3
+    N=1000
     a=[2*pi,16]
     J=[128,256];
     epsilon=1e-3
@@ -502,7 +500,7 @@ def exa3_40(needFigure=True):
     if (needFigure==True):
         plt.figure(1)
         ch0.PlotSetup()
-        ax = plt.gca(projection='3d')
+        ax = plt.gcf().add_subplot(projection='3d')
         ax.plot_surface(xx,yy,ut[:,:,-1],
                         cmap=cm.bone,linewidth=0,
                         antialiased=False)
@@ -566,7 +564,7 @@ def exa3_44(needFigure=True):
     if needFigure:
         plt.figure(1)
         ch0.PlotSetup()
-        ax = plt.gca(projection='3d')
+        ax = plt.gcf().add_subplot(projection='3d')
         [T,X]=np.meshgrid(t,x)
         ax.plot_surface(T,X,ut,cmap=cm.coolwarm,linewidth=0, antialiased=False)
         plt.axis('equal')

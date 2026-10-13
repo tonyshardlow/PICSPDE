@@ -224,7 +224,7 @@ def twod_linear_FEM(ns,xv,yv,elt2vert,nvtx,ne,h,a,f):
     #
     m=ns + 1
     # plotting
-    ax = plt.gca(projection='3d')
+    ax = plt.figure().add_subplot(projection='3d')
     ax.plot_wireframe(xv.reshape((m,m)),
                       yv.reshape((m,m)),
                       uh.reshape((m,m)),colors='k')
@@ -261,7 +261,7 @@ def example_p58():
     ch0.PlotSetup()
     for i in range(1,5):
         plt.subplot(2,2,i)
-        ne=pow(2,i)
+        ne=2 ** i # an int: math.pow gives a float
         uh,A,b,K,M=oned_linear_FEM(ne,
                                    np.ones(ne),
                                    10*np.ones(ne),

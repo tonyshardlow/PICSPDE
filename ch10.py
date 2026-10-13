@@ -444,8 +444,7 @@ def exa10_39(needFigure=True):
     if (needFigure==True):
         plt.figure(1)
         ch0.PlotSetup()
-        ax = plt.gca()
-        ax = plt.gca(projection='3d')
+        ax = plt.gcf().add_subplot(projection='3d')
         [T,X]=np.meshgrid(tref,x)
         CS=ax.plot_wireframe(T,X,ureft,rstride=3,cstride=3,colors='k')
         #CS=ax.contourf(tref,x,ureft,10,cmap=plt.cm.bone)
@@ -501,7 +500,7 @@ def exa10_42(needFigure=True):
     if needFigure:
         plt.figure(1)
         ch0.PlotSetup()
-        ax = plt.gca(projection='3d')
+        ax = plt.gcf().add_subplot(projection='3d')
         [T,X]=np.meshgrid(t,x)
         ax.plot_surface(T,X,ut,cmap=cm.coolwarm,linewidth=0, antialiased=False)
         ax.set_zlabel(r'$u$')
