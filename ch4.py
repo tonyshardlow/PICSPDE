@@ -106,7 +106,7 @@ def parseed():
         stream[j].set_state(init_state[j])# reset state of jth rng
         return stream[j].randn(1,M)
     #
-    sr4=srandn(4) # reproduces the 4th row        
+    sr4=srandn(3) # reproduces the 4th row (rows are indexed from zero)        
     # parallelize the above code
     rc = Client()  
     # wait for 4 engines to be ready

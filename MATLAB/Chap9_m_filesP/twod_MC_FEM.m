@@ -8,7 +8,7 @@ b_nodes=find((xv==0)|(xv==1)|(yv==0)|(yv==1));
 int_nodes=1:nvtx; int_nodes(b_nodes)=[]; 
 % specify covariance 
 fhandle1=@(x1,x2)gaussA_exp(x1,x2,ell^(-2),ell^(-2),0);
-n1=ns+1; n2=ns+1; m1=alpha*n1; m2=alpha*n2;
+n1=ns+1; n2=ns+1; m1=floor(alpha*n1); m2=floor(alpha*n2); % integer padding
 C_red=reduced_cov(n1+m1,n2+m2,1/ns,1/ns,fhandle1);
 % initialise
 sum_us=zeros(nvtx,1); sum_sq=zeros(nvtx,1); 

@@ -1,5 +1,5 @@
 function [l2_norm, h1_norm] = get_norm(fhandle, a, b, J)
-grid=[a:(b-a)/J:b]';
+grid=linspace(a,b,J+1)'; % always J+1 points (the colon form can lose b to rounding)
 % evaluate the function on the grid
 u=fhandle(grid); 
 [Uk,nu]=get_coeffs(u, a, b);
