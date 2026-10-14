@@ -159,8 +159,8 @@ def spde_fd_n_exp(u0,T,a,N,J,epsilon,sigma,ell,fhandle):
                          shape=(J+1,J+1),
                          format='csc')
     ind=np.arange(0,J + 1)
-    A[0,1]=2
-    A[-1,-2]=2
+    A[0,1]=-2
+    A[-1,-2]=-2
     EE=scipy.sparse.identity(ind.size,format='csc') + (Dt * epsilon/h**2) * A 
     ut=np.zeros((J + 1,t.size)) # initialize vectors
     ut[:,0]=u0
