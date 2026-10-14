@@ -52,6 +52,7 @@ import ch2
 import ch3
 from ch3 import fNagumo as fNagumo
 from ch3 import fAC as fAC
+from ch3 import icspde_dst1
 from numba import vectorize, float64
 # 
 assert(1/2==0.5),'Fractions are not treated as floating-point numbers. Need: from __future__ import division' 
@@ -80,8 +81,7 @@ def get_onedD_dW(bj,kappa,iFspace,M,s0):
     if (iFspace == 1):
         dW=X
     else:
-        dW=icspde_dst1(np.squeeze(X))#,type=1,axis=0)
-        dW=dW.reshape(X.shape)
+        dW=icspde_dst1(X.T).T    # transform along the mode axis
     return dW
 #
 def get_oned_bj(dtref,J,a,r):
@@ -301,7 +301,7 @@ def spde_fem_MhDt(u0,T,a,Nref,kappa,neref,L,
     #
     ZM=np.zeros((M,1))
     #
-    bj=get_onedD_bj(dtref,neref,a,r);    bj[ne:-1]=0
+    bj=get_onedD_bj(dtref,neref,a,r);    bj[ne-1:]=0
     iFspace=0
     #
     u=np.matlib.repmat(u0,M,1)
