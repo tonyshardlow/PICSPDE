@@ -2,7 +2,7 @@ function [t,u,ut]=spde_oned_Gal_MJDt(u0,T,a,N,kappa,Jref,J,epsilon,...
                                         fhandle,ghandle,r,M)
 dtref=T/N; Dt=kappa*dtref; t=[0:Dt:T]';
 % use IJJ to set unwanted modes to zero.
-IJJ=J/2+1:Jref-J/2-1;  
+IJJ=J/2+2:Jref-J/2; % correction 14-Oct 2026  
 % set Lin Operators
 kk  = 2*pi*[0:Jref/2 -Jref/2+1:-1]'/a; 
 Dx = (1i*kk); MM=-epsilon*Dx.^2; EE=1./(1+Dt*MM); EE(IJJ)=0;

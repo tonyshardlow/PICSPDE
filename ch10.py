@@ -105,10 +105,10 @@ def get_oned_dW(bj,kappa,iFspace,M,s0):
         nn=s0.randn(M,J)
     else:
         nn=np.sum(s0.randn(kappa,M,J),0)
-    nn2=np.vstack([nn[0:1,:],
-                   (nn[1:J/2,:] + 1j * nn[J/2 + 1:J,:]) / sqrt(2),
-                   nn[J/2:J/2+1,:],
-                   (nn[J/2-1:0:-1,:] - 1j * nn[J-1:J / 2 :-1,:])/ sqrt(2)
+    nn2=np.hstack([nn[:,0:1],
+                   (nn[:,1:J//2] + 1j * nn[:,J//2 + 1:J]) / sqrt(2),
+                   nn[:,J//2:J//2+1],
+                   (nn[:,J//2-1:0:-1] - 1j * nn[:,J-1:J // 2 :-1])/ sqrt(2)
                ])
     X=bj*nn2
     if (iFspace == 1):
@@ -250,7 +250,7 @@ def spde_oned_Gal_MJDt(u0,T,a,N,kappa,Jref,J,epsilon,fhandle,ghandle,r,M,s0):
         u=np.real(np.copy((ifft(uh))))
         ut[0:Jref,n + 1]=u[-1,:]
     ut[Jref,:]=ut[0,:]
-    u=np.vstack([u,u[:]])
+    u=np.hstack([u,u[:,:1]])
     return t,u,ut
 #
 def spde_twod_Gal(u0,T,a,N,kappa,J,epsilon,fhandle,ghandle,alpha,M):
@@ -280,7 +280,6 @@ def spde_twod_Gal(u0,T,a,N,kappa,J,epsilon,fhandle,ghandle,alpha,M):
         u=np.real(ifft2(uh_new))
         ut[:-1,:-1,n + 1]=u[-1,:,:]
         uh=uh_new
-    u[:,-1,:] =u[:,0,:];    u[:,:,-1] =u[:,:,0]
     ut[:,-1,:]=ut[:,0,:];   ut[-1,:,:]=ut[0,:,:]
     return t,u,ut
 #
